@@ -1,0 +1,27 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+data/jobs/
+data/job_intelligence_test.json
+data/job_opportunity_test.json
+data/job_test.json
+
+# Development backups / temporary snapshots
+*.backup
+*.bak
+*.backup.*
+*.bak_*
+
+# Local marker files
+ACCEPTED
+
+# All backup variants
+*.bak*
+*.backup*
+
+# All backup variants
+*.bak*
+*.backup*

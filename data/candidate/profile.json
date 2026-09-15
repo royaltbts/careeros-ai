@@ -1,0 +1,96 @@
+{
+  "career_direction": {
+    "primary": "Customer Success",
+    "target_roles": [
+      "Customer Success Manager",
+      "Senior Customer Success Manager",
+      "Strategic Customer Success Manager",
+      "Enterprise Customer Success Manager",
+      "Customer Success Leader"
+    ],
+    "geography": "Any"
+  },
+
+  "experience": {
+    "years": "10+",
+    "current_background": "Operations and customer-facing service leadership",
+    "people_management": true,
+    "project_management": true,
+    "lean_six_sigma": true
+  },
+
+  "customer_experience": {
+    "external_clients": [
+      {
+        "company": "Google",
+        "relationship": "Short-term project",
+        "scope": "Incentive management plan"
+      },
+      {
+        "company": "Johnson & Johnson",
+        "relationship": "Short-term project",
+        "scope": "Incentive management plan"
+      }
+    ],
+
+    "customer_facing_activities": [
+      "Weekly business reviews",
+      "Monthly process-excellence reviews",
+      "Customer and stakeholder communication",
+      "Escalation management"
+    ],
+
+    "customer_issues_handled": [
+      "Google Play issues",
+      "Google Play gift card issues",
+      "Refund issues",
+      "Pixel handset-related issues"
+    ]
+  },
+
+  "customer_success_metrics": [
+    "CSAT",
+    "SLA",
+    "WFM",
+    "RCR"
+  ],
+
+  "improvement_experience": [
+    {
+      "initiative": "Issue-category-based bots",
+      "problem": "Recurring customer issues and SLA pressure",
+      "action": [
+        "Reorganized knowledge base",
+        "Implemented bots based on issue category"
+      ],
+      "objective": "Protect SLA and improve the customer resolution pathway"
+    }
+  ],
+
+  "strengths": [
+    "People management",
+    "Metrics improvement",
+    "Lean Six Sigma",
+    "Project management",
+    "Customer problem solving",
+    "Stakeholder management",
+    "Process improvement",
+    "Continuous improvement"
+  ],
+
+  "excluded_skills": [
+    "Snowflake",
+    "Advanced SQL",
+    "Power BI development",
+    "Jira administration",
+    "Confluence administration"
+  ],
+
+  "truth_rules": [
+    "Never fabricate customer experience",
+    "Never claim excluded skills as expertise",
+    "Do not convert short-term client projects into long-term account ownership",
+    "Distinguish direct experience from transferable experience",
+    "Every important resume claim must have supporting evidence"
+  ]
+}

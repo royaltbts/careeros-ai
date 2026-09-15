@@ -1,0 +1,114 @@
+[
+  {
+    "id": "EV001",
+    "capability": "CUSTOMER_COMMUNICATION",
+    "claim": "Experienced in customer and stakeholder communication.",
+    "evidence": "Conducted weekly business reviews and monthly process-excellence reviews involving metrics, performance discussions and stakeholder communication.",
+    "source": "Candidate-confirmed career information",
+    "evidence_type": "Direct experience",
+    "status": "VERIFIED",
+    "allowed_use": [
+      "Customer communication",
+      "Business reviews",
+      "Stakeholder management"
+    ]
+  },
+  {
+    "id": "EV002",
+    "capability": "CUSTOMER_PROBLEM_SOLVING",
+    "claim": "Experienced in handling customer-related operational issues.",
+    "evidence": "Worked on Google Play issues, Google Play gift card issues, refund issues and Pixel handset-related issues.",
+    "source": "Candidate-confirmed career information",
+    "evidence_type": "Direct experience",
+    "status": "VERIFIED",
+    "allowed_use": [
+      "Customer problem solving",
+      "Escalation management",
+      "Customer support operations"
+    ]
+  },
+  {
+    "id": "EV003",
+    "capability": "CUSTOMER_SATISFACTION",
+    "claim": "Experienced in managing customer experience metrics.",
+    "evidence": "Worked with CSAT, SLA, WFM and RCR metrics.",
+    "source": "Candidate-confirmed career information",
+    "evidence_type": "Direct experience",
+    "status": "VERIFIED",
+    "allowed_use": [
+      "Customer satisfaction",
+      "Customer experience",
+      "Service performance"
+    ]
+  },
+  {
+    "id": "EV004",
+    "capability": "CONTINUOUS_IMPROVEMENT",
+    "claim": "Experienced in using process improvement to address customer and operational problems.",
+    "evidence": "Reorganized the knowledge base and implemented issue-category-based bots to address recurring customer issues and protect SLA.",
+    "source": "Candidate-confirmed career information",
+    "evidence_type": "Direct experience",
+    "status": "VERIFIED",
+    "allowed_use": [
+      "Continuous improvement",
+      "Process optimization",
+      "Customer experience improvement"
+    ]
+  },
+  {
+    "id": "EV005",
+    "capability": "PEOPLE_LEADERSHIP",
+    "claim": "Experienced in people management and operational leadership.",
+    "evidence": "Led teams and managed operational performance as part of an operations leadership background.",
+    "source": "Candidate-confirmed career information",
+    "evidence_type": "Direct experience",
+    "status": "VERIFIED",
+    "allowed_use": [
+      "People management",
+      "Team leadership",
+      "Customer Success leadership"
+    ]
+  },
+  {
+    "id": "EV006",
+    "capability": "PROJECT_MANAGEMENT",
+    "claim": "Experienced in project management and cross-functional execution.",
+    "evidence": "Managed projects involving process improvement, stakeholder communication and implementation activities.",
+    "source": "Candidate-confirmed career information",
+    "evidence_type": "Direct experience",
+    "status": "VERIFIED",
+    "allowed_use": [
+      "Project management",
+      "Cross-functional collaboration",
+      "Operational transformation"
+    ]
+  },
+  {
+    "id": "EV007",
+    "capability": "CLIENT_PROJECT_EXPOSURE",
+    "claim": "Has experience working on a short-term project involving Google.",
+    "evidence": "Worked on a short-term project involving an incentive management plan for Google.",
+    "source": "Candidate-confirmed career information",
+    "evidence_type": "Transferable experience",
+    "status": "VERIFIED",
+    "allowed_use": [
+      "Client exposure",
+      "Stakeholder management",
+      "Project experience"
+    ]
+  },
+  {
+    "id": "EV008",
+    "capability": "CLIENT_PROJECT_EXPOSURE",
+    "claim": "Has experience working on a short-term project involving Johnson & Johnson.",
+    "evidence": "Worked on a short-term project involving an incentive management plan for Johnson & Johnson.",
+    "source": "Candidate-confirmed career information",
+    "evidence_type": "Transferable experience",
+    "status": "VERIFIED",
+    "allowed_use": [
+      "Client exposure",
+      "Stakeholder management",
+      "Project experience"
+    ]
+  }
+]

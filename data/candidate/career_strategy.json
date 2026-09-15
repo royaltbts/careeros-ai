@@ -1,0 +1,46 @@
+{
+  "primary_direction": "Customer Success",
+
+  "target_roles": [
+    "Customer Success Manager",
+    "Senior Customer Success Manager",
+    "Strategic Customer Success Manager",
+    "Enterprise Customer Success Manager",
+    "Customer Success Leader"
+  ],
+
+  "preferred_seniority": [
+    "Manager",
+    "Senior Manager",
+    "Director",
+    "Leadership"
+  ],
+
+  "geography": "Any",
+
+  "priority_capabilities": [
+    "Customer Success",
+    "Customer relationship management",
+    "Customer communication",
+    "Business reviews",
+    "Customer satisfaction",
+    "Stakeholder management",
+    "Problem solving",
+    "People leadership",
+    "Project management",
+    "Continuous improvement"
+  ],
+
+  "avoid_roles": [
+    "Roles requiring advanced technical skills as a primary responsibility",
+    "Roles requiring unverified tools as mandatory expertise"
+  ],
+
+  "strategy_notes": [
+    "Prioritize Customer Success roles over generic operations roles.",
+    "Favor roles where customer-facing operations leadership is transferable.",
+    "Do not fabricate SaaS experience.",
+    "Do not claim excluded technical skills.",
+    "Prefer opportunities where leadership and continuous improvement are valuable."
+  ]
+}
