@@ -87,6 +87,27 @@ The system does not automatically submit applications or send outreach.
 - Structured agent findings
 - Deterministic orchestration
 
+## Job Discovery
+
+CareerOS currently supports deterministic local discovery and live Greenhouse board discovery.
+
+Greenhouse discovery is configured through environment variables:
+
+```text
+CAREEROS_DISCOVERY_PROVIDER=greenhouse
+CAREEROS_GREENHOUSE_BOARDS=stripe
+```
+
+The discovery layer:
+
+- Filters for Customer Success-oriented roles.
+- Retrieves job details from Greenhouse.
+- Detects work mode from the job description.
+- Applies the candidate's geography and work-mode policy.
+- Preserves the original job description for downstream intelligence processing.
+
+Local discovery remains available for deterministic development and testing.
+
 ## Testing
 
 Current regression status: **84 passed**.
