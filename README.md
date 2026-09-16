@@ -89,7 +89,7 @@ The system does not automatically submit applications or send outreach.
 
 ## Testing
 
-Current regression status: **76 passed**.
+Current regression status: **84 passed**.
 
 ## Project Status
 
