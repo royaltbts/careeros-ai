@@ -1,4 +1,5 @@
 from agents import Agent
+from app.models.candidate_finding import CandidateFinding
 
 profile_agent = Agent(
     name="Candidate Profile Analyst",
@@ -31,4 +32,5 @@ project management, stakeholder management and process improvement.
 Produce practical career guidance rather than generic motivational advice.
 """,
     model="gpt-5.6",
+    output_type=CandidateFinding,
 )

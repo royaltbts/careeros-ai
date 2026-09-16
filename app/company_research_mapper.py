@@ -22,7 +22,8 @@ def map_research_to_intelligence(
             industry = fact.fact
 
         elif category in {"product", "product/service"}:
-            product_or_service = fact.fact
+            if not product_or_service:
+                product_or_service = fact.fact
 
         elif category in {"customer segment", "customer segments"}:
             if fact.fact not in customer_segments:

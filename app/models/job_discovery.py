@@ -7,6 +7,7 @@ class JobDiscovery(BaseModel):
     company: str
     title: str
     location: Optional[str] = None
+    work_mode: Optional[str] = None
     source: str
     source_url: Optional[str] = None
     discovered_at: str

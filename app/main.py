@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 from agents import Runner
 
-from agent_nodes.profile_agent import profile_agent
+from app.agent_nodes.profile_agent import profile_agent
 load_dotenv()
 
 

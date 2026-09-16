@@ -10,6 +10,10 @@ class CareerStrategy(BaseModel):
     preferred_seniority: List[str]
 
     geography: str
+    home_country: str = "India"
+    home_city: str = "Hyderabad"
+    local_work_modes: List[str] = ["on-site", "hybrid", "remote"]
+    outside_country_work_mode: str = "remote"
 
     priority_capabilities: List[str]
 

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import unittest
 
 from app.models.opportunity_decision_audit import (
@@ -12,6 +14,13 @@ from app.opportunity_decision_audit_store import (
 class OpportunityDecisionAuditStoreTest(unittest.TestCase):
 
     def test_audit_history_is_preserved(self):
+        audit_file = Path(
+            "data/jobs/opportunity_decision_audit/TEST-AUDIT-001.json"
+        )
+        audit_file.unlink(missing_ok=True)
+        self.addCleanup(
+            lambda: audit_file.unlink(missing_ok=True)
+        )
 
         first = OpportunityDecisionAudit(
             job_id="TEST-AUDIT-001",

@@ -96,13 +96,7 @@ def build_opportunity_decision(
     elif critical_gaps:
         recommendation = "CONDITIONAL"
     elif priority == "HIGH":
-        if (
-            research_confidence is not None
-            and research_confidence < 75
-        ):
-            recommendation = "REVIEW"
-        else:
-            recommendation = "APPLY"
+        recommendation = "APPLY"
     else:
         recommendation = "REVIEW"
 
@@ -112,15 +106,14 @@ def build_opportunity_decision(
             "priority threshold"
         )
     elif (
-        recommendation == "REVIEW"
-        and priority == "HIGH"
+        priority == "HIGH"
         and research_confidence is not None
         and research_confidence < 75
         and not critical_gaps
     ):
         reasons.append(
-            "High-priority opportunity requires stronger "
-            "company research before application effort"
+            "Company research confidence is limited; "
+            "human review should validate company context before submission."
         )
     elif recommendation == "REVIEW":
         reasons.append(

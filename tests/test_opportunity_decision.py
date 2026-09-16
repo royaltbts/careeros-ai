@@ -127,9 +127,9 @@ def test_high_priority_with_limited_research_requires_review():
 
     decision = build_opportunity_decision(opportunity)
 
-    assert decision.recommendation == "REVIEW"
+    assert decision.recommendation == "APPLY"
     assert any(
-        "stronger company research" in reason
+        "Company research confidence is limited" in reason
         for reason in decision.decision_reasons
     )
 

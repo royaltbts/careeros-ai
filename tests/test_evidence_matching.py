@@ -98,31 +98,28 @@ class EvidenceMatchingTest(unittest.TestCase):
         )
 
     def test_strategic_csm_has_direct_and_transferable_evidence(self):
-        from app.application_strategy import (
-            build_strategy,
-            load_ranked_opportunities,
-            load_evidence,
-        )
+        from app.application_strategy import build_strategy
 
-        opportunities = load_ranked_opportunities()
-        evidence = load_evidence()
-
-        opportunity = next(
-            item
-            for item in opportunities
-            if item["job_id"] == "JOB-002"
-        )
+        opportunity = {
+            "job_id": "JOB-002",
+            "company": "Example Company",
+            "title": "Strategic Customer Success Manager",
+            "priority": "HIGH",
+            "fit_score": 90.0,
+            "opportunity_score": 90.0,
+            "critical_gaps": [],
+            "core_gaps": [],
+        }
 
         strategy = build_strategy(
             opportunity,
-            evidence,
+            self.evidence,
         )
 
         self.assertIn(
             "CUSTOMER_COMMUNICATION",
             strategy.evidence_strengths,
         )
-
         self.assertIn(
             "CUSTOMER_SATISFACTION",
             strategy.transferable_capabilities,

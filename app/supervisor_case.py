@@ -2,6 +2,7 @@ from app.models.supervisor_case import (
     AgentFinding,
     SupervisorCase,
 )
+from app.models.candidate_finding import CandidateFinding
 
 from app.risk_agent import build_risk_finding
 
@@ -10,6 +11,7 @@ def build_supervisor_case(
     opportunity: dict,
     decision: dict,
     safety: dict | None = None,
+    candidate_finding: CandidateFinding | None = None,
 ) -> SupervisorCase:
     """
     Build a shared Supervisor Case from existing
@@ -185,6 +187,7 @@ def build_supervisor_case(
     risk_finding = build_risk_finding(
         opportunity,
         decision,
+        candidate_finding=candidate_finding,
     )
 
     findings.append(

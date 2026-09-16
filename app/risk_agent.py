@@ -1,9 +1,11 @@
 from app.models.supervisor_case import AgentFinding
+from app.models.candidate_finding import CandidateFinding
 
 
 def build_risk_finding(
     opportunity: dict,
     decision: dict,
+    candidate_finding: CandidateFinding | None = None,
 ) -> AgentFinding:
     risks = []
     evidence_refs = []
@@ -39,6 +41,45 @@ def build_risk_finding(
         [],
     )
 
+    if candidate_finding is not None:
+        transition_gaps = [
+            gap
+            for gap in candidate_finding.explicit_gaps
+            if gap in {
+                "Formal SaaS experience",
+                "CRM expertise",
+                "Enterprise account ownership",
+            }
+        ]
+
+        other_gaps = [
+            gap
+            for gap in candidate_finding.explicit_gaps
+            if gap not in transition_gaps
+        ]
+
+        if other_gaps:
+            risks.extend(
+                [
+                    f"Candidate finding identifies an explicit gap: {gap}"
+                    for gap in other_gaps
+                ]
+            )
+
+        if transition_gaps:
+            risks.append(
+                "Non-blocking transition risk: "
+                "strong transferable Customer Success capability is present, "
+                "but the following formal experience is not verified: "
+                + ", ".join(transition_gaps)
+                + "."
+            )
+
+        if candidate_finding.forbidden_assumptions:
+            evidence_refs.extend(
+                candidate_finding.verified_evidence_refs
+            )
+
     if forbidden_claims:
         risks.append(
             "Some candidate capabilities are explicitly "
@@ -54,15 +95,24 @@ def build_risk_finding(
             "should not be assumed."
         )
 
+    blocking_risk = bool(
+        critical_gaps
+        or core_gaps
+        or forbidden_claims
+        or other_gaps
+    )
+
     recommendation = (
         "REVIEW"
-        if risks
+        if blocking_risk
         else "APPLY"
     )
 
     confidence = (
         0.95
         if critical_gaps
+        else 0.85
+        if candidate_finding is not None
         else 0.80
     )
 

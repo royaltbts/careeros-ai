@@ -6,10 +6,10 @@ import uuid
 from pathlib import Path
 
 from app.market_scout_pipeline import (
-    load_discovered_jobs,
     build_job_intelligence,
     save_job_intelligence,
 )
+from app.job_discovery_factory import discover_jobs
 
 from app.company_intelligence import (
     build_company_intelligence,
@@ -23,6 +23,12 @@ from app.company_research_mock import (
 )
 from app.company_research_pipeline import (
     process_company_research,
+)
+from app.company_intelligence_merge import (
+    merge_company_intelligence,
+)
+from app.company_research_web_basic import (
+    BasicWebCompanyResearchSource,
 )
 
 from app.models.candidate import CandidateProfile
@@ -39,7 +45,7 @@ from app.opportunity_decision import build_opportunity_decision
 from app.opportunity_decision_store import save_opportunity_decision
 from app.models.opportunity_decision_audit import OpportunityDecisionAudit
 from app.opportunity_decision_audit_store import save_opportunity_decision_audit
-from app.application_strategy import build_strategy
+from app.application_strategy import build_strategy, save_strategy
 from app.application_effort import build_application_effort
 from app.application_effort_store import save_application_effort
 from app.profile_tailor import build_profile_tailor
@@ -52,6 +58,9 @@ from app.supervisor import (
     build_supervisor_decision_from_case,
 )
 from app.supervisor_case import build_supervisor_case
+from app.candidate_provider import (
+    build_candidate_finding_with_provider,
+)
 from app.supervisor_decision_store import save_supervisor_decision
 from app.models.deliberation_record import DeliberationRecord
 from app.deliberation_store import save_deliberation
@@ -371,6 +380,22 @@ def run_careeros():
     print()
     print("[1/9] Candidate Truth loaded")
 
+    candidate_provider = os.getenv(
+        "CAREEROS_CANDIDATE_PROVIDER",
+        "mock",
+    ).strip().lower()
+
+    print(
+        f"  Candidate provider: "
+        f"{candidate_provider.upper()}"
+    )
+
+    candidate_finding = build_candidate_finding_with_provider(
+        candidate,
+        evidence,
+        provider=candidate_provider,
+    )
+
     # ========================================================
     # 2. MARKET SCOUT
     # ========================================================
@@ -378,8 +403,14 @@ def run_careeros():
     print()
     print("[2/9] Market Scout")
 
-    jobs = load_discovered_jobs(
-        str(DISCOVERED_JOBS_FILE)
+    jobs, discovery_provider = discover_jobs(
+        str(DISCOVERED_JOBS_FILE),
+        strategy=career_strategy,
+    )
+
+    print(
+        f"  Discovery provider: "
+        f"{discovery_provider}"
     )
 
     print(
@@ -437,11 +468,13 @@ def run_careeros():
         )
     elif research_provider == "mock":
         company_research_source = MockCompanyResearchSource()
+    elif research_provider == "basic_web":
+        company_research_source = None
     else:
         raise ValueError(
             "Unsupported CAREEROS_RESEARCH_PROVIDER: "
             f"{research_provider}. "
-            "Use 'mock' or 'openai'."
+            "Use 'mock', 'openai', or 'basic_web'."
         )
 
     print(
@@ -452,24 +485,54 @@ def run_careeros():
     company_intelligence_by_job = {}
 
     for intelligence in intelligence_list:
+        role_derived_intelligence = build_company_intelligence(
+            intelligence.job_id
+        )
+
         try:
-            research = company_research_source.research(
-                intelligence.company
+            if research_provider == "mock":
+                research = company_research_source.research(
+                    intelligence.company
+                )
+                web_intelligence = process_company_research(
+                    research
+                )
+
+            elif research_provider == "openai":
+                research = company_research_source.research(
+                    intelligence.company
+                )
+                web_intelligence = process_company_research(
+                    research
+                )
+
+            elif research_provider == "basic_web":
+                web_source = BasicWebCompanyResearchSource(
+                    intelligence.source_url or ""
+                )
+                research = web_source.research(
+                    intelligence.company
+                )
+                web_intelligence = process_company_research(
+                    research
+                )
+
+            else:
+                raise ValueError(
+                    f"Unsupported research provider: {research_provider}"
+                )
+
+            company_intelligence = merge_company_intelligence(
+                role_derived_intelligence,
+                web_intelligence,
             )
 
-            company_intelligence = process_company_research(
-                research
-            )
-
-        except (AgentsException, OpenAIError) as exc:
+        except (AgentsException, OpenAIError, ValueError) as exc:
             print(
                 f"  Web research unavailable for "
                 f"{intelligence.company}: {type(exc).__name__}"
             )
-
-            company_intelligence = build_company_intelligence(
-                intelligence.job_id
-            )
+            company_intelligence = role_derived_intelligence
 
         save_company_intelligence(
             company_intelligence,
@@ -663,6 +726,7 @@ def run_careeros():
                 mode="json"
             ),
             safety=None,
+            candidate_finding=candidate_finding,
         )
 
         supervisor_result = build_supervisor_decision_from_case(
@@ -805,6 +869,7 @@ def run_careeros():
         strategies.append(
             strategy
         )
+        save_strategy(strategy)
 
     print(
         f"Strategies created: "
