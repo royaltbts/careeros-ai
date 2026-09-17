@@ -56,9 +56,26 @@ class GreenhouseJobDiscoveryProvider(JobDiscoveryProvider):
     @staticmethod
     def _clean_html(value: str) -> str:
         text = unescape(value or "")
-        text = re.sub(r"<[^>]+>", " ", text)
-        text = re.sub(r"\s+", " ", text)
-        return text.strip()
+
+        # Preserve semantic boundaries from common block-level HTML.
+        text = re.sub(
+            r"</?(?:p|div|h[1-6]|li|ul|ol|br)[^>]*>",
+            "\\n",
+            text,
+            flags=re.IGNORECASE,
+        )
+
+        # Remove remaining HTML tags.
+        text = re.sub(r"<[^>]+>", "", text)
+
+        # Normalize whitespace without destroying line boundaries.
+        lines = []
+        for line in text.splitlines():
+            line = re.sub(r"\\s+", " ", line).strip()
+            if line:
+                lines.append(line)
+
+        return "\\n".join(lines)
 
     def discover(self) -> list[JobDiscovery]:
         if not self.board_token:
