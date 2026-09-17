@@ -58,6 +58,17 @@ class TestGreenhouseJobDiscoveryProvider(unittest.TestCase):
 
         self.assertEqual(mock_get.call_count, 2)
 
+
+    @patch.object(GreenhouseJobDiscoveryProvider, "_get")
+    def test_returns_empty_when_greenhouse_request_fails(self, mock_get):
+        mock_get.return_value = None
+
+        provider = GreenhouseJobDiscoveryProvider("example")
+        results = provider.discover()
+
+        self.assertEqual(results, [])
+        mock_get.assert_called_once()
+
     def test_rejects_empty_board_token(self):
         provider = GreenhouseJobDiscoveryProvider("")
 
