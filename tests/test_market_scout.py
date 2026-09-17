@@ -57,8 +57,19 @@ class TestMarketScout(unittest.TestCase):
             0
         )
 
-        self.assertIsNotNone(
-            intelligence.experience_required
+        self.assertIn(
+            "Own customer relationships and account plans.",
+            intelligence.responsibilities
+        )
+
+        self.assertIn(
+            "Manage escalations and complex customer situations.",
+            intelligence.responsibilities
+        )
+
+        self.assertEqual(
+            intelligence.experience_required,
+            "5+ years of customer-facing experience"
         )
 
 

@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 
 from app.models.job_discovery import JobDiscovery
@@ -48,12 +49,79 @@ def classify_requirement(name: str) -> tuple[str, str]:
     return "CORE", "CUSTOMER_SUCCESS"
 
 
+
+def _extract_sections(description: str) -> dict[str, list[str]]:
+    """Extract common job-description sections from line-preserved text."""
+
+    headings = {
+        "responsibilities": "responsibilities",
+        "responsibility": "responsibilities",
+        "what you'll do": "responsibilities",
+        "what you’ll do": "responsibilities",
+        "requirements": "requirements",
+        "requirement": "requirements",
+        "qualifications": "requirements",
+        "qualification": "requirements",
+        "what you'll need": "requirements",
+        "what you’ll need": "requirements",
+        "who you are": "requirements",
+        "nice to haves": "requirements",
+    }
+
+    sections: dict[str, list[str]] = {}
+    current_section: str | None = None
+
+    for raw_line in description.splitlines():
+        line = raw_line.strip()
+
+        if not line:
+            continue
+
+        normalized = line.rstrip(":").strip().lower()
+
+        if normalized in headings:
+            current_section = headings[normalized]
+            sections.setdefault(current_section, [])
+            continue
+
+        if current_section is None:
+            continue
+
+        line = re.sub(r"^[•*\-\u2022]\s*", "", line)
+        line = re.sub(r"^\d+[.)]\s*", "", line)
+
+        if line:
+            sections[current_section].append(line)
+
+    return sections
+
+
+def _extract_experience(description: str) -> str | None:
+    """Extract the specific experience requirement containing years."""
+
+    matches = re.findall(
+        r"[^.\n]*\b\d+\+?\s+years?\b[^.\n]*",
+        description,
+        re.IGNORECASE,
+    )
+
+    if not matches:
+        return None
+
+    return " ".join(
+        match.strip()
+        for match in matches
+    )
+
 def build_job_intelligence(
     job: JobDiscovery
 ) -> JobIntelligence:
 
     description = job.raw_description
     description_lower = description.lower()
+    sections = _extract_sections(description)
+    responsibilities = sections.get("responsibilities", [])
+    experience_required = _extract_experience(description)
 
     requirements = []
 
@@ -141,8 +209,8 @@ def build_job_intelligence(
         source_type=job.source,
         employment_type=None,
         industry=None,
-        experience_required=None,
-        responsibilities=[],
+        experience_required=experience_required,
+        responsibilities=responsibilities,
         requirements=requirements,
         customer_success_capabilities=customer_success_capabilities,
         tools_and_platforms=tools_and_platforms
