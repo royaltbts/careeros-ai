@@ -176,3 +176,29 @@ def test_critical_gap_overrides_research_confidence():
     decision = build_opportunity_decision(opportunity)
 
     assert decision.recommendation == "CONDITIONAL"
+
+
+def test_core_gaps_are_exposed_as_transferable_opportunities():
+    opportunity = {
+        "job_id": "JOB-CORE-001",
+        "company": "CoreGapCo",
+        "title": "Customer Success Manager",
+        "opportunity_score": 70,
+        "priority": "MEDIUM",
+        "fit_score": 70,
+        "critical_gaps": [],
+        "core_gaps": ["SaaS experience", "CRM experience"],
+        "company_strategic_fit": None,
+    }
+
+    decision = build_opportunity_decision(opportunity)
+
+    assert decision.recommendation == "REVIEW"
+    assert decision.transferable_opportunities == [
+        "SaaS experience",
+        "CRM experience",
+    ]
+    assert any(
+        "2 core capability gap(s)" in reason
+        for reason in decision.decision_reasons
+    )
