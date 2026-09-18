@@ -30,6 +30,7 @@ class TestMarketScout(unittest.TestCase):
             5+ years of customer-facing experience.
             Experience managing customer relationships.
             Strong stakeholder management and communication skills.
+            Experience hiring, training, and coaching customer-facing teams.
             Experience with SaaS products.
             Experience using CRM platforms.
             """
@@ -70,6 +71,26 @@ class TestMarketScout(unittest.TestCase):
         self.assertEqual(
             intelligence.experience_required,
             "5+ years of customer-facing experience"
+        )
+
+        requirement_names = {
+            requirement.name
+            for requirement in intelligence.requirements
+        }
+
+        self.assertIn(
+            "People leadership",
+            requirement_names
+        )
+
+        self.assertIn(
+            "Stakeholder management",
+            requirement_names
+        )
+
+        self.assertIn(
+            "SaaS experience",
+            requirement_names
         )
 
 

@@ -96,6 +96,96 @@ def _extract_sections(description: str) -> dict[str, list[str]]:
     return sections
 
 
+def _canonical_requirements(requirement_lines: list[str]) -> list[str]:
+    """Map requirement signals to the canonical CareerOS vocabulary."""
+
+    signals = {
+        "Customer relationship management": [
+            "customer relationship",
+            "account relationship",
+        ],
+        "Customer satisfaction": [
+            "customer satisfaction",
+        ],
+        "Business reviews": [
+            "business review",
+        ],
+        "Customer health": [
+            "customer health",
+        ],
+        "Customer adoption": [
+            "customer adoption",
+        ],
+        "Escalation management": [
+            "escalation management",
+            "manage escalations",
+        ],
+        "Stakeholder management": [
+            "stakeholder management",
+            "executive sponsor",
+            "key relationships",
+        ],
+        "Customer communication": [
+            "customer communication",
+            "communication skills",
+        ],
+        "Problem solving": [
+            "problem solving",
+            "solve customer problems",
+        ],
+        "People leadership": [
+            "people management",
+            "people leadership",
+            "hiring",
+            "hire, train, and coach",
+            "hiring, training, and coaching",
+        ],
+        "Continuous improvement": [
+            "continuous improvement",
+        ],
+        "Advanced SQL": [
+            "advanced sql",
+        ],
+        "Snowflake": [
+            "snowflake",
+        ],
+        "Power BI development": [
+            "power bi development",
+        ],
+        "Technical integrations": [
+            "technical integrations",
+        ],
+        "SaaS experience": [
+            "saas",
+            "software products",
+            "software company",
+        ],
+        "CRM experience": [
+            "crm",
+        ],
+        "Customer Success platform experience": [
+            "customer success platform",
+        ],
+    }
+
+    normalized_lines = [
+        line.replace("&nbsp;", " ").strip().lower()
+        for line in requirement_lines
+    ]
+
+    results = []
+
+    for canonical_name, keywords in signals.items():
+        if any(
+            keyword in line
+            for line in normalized_lines
+            for keyword in keywords
+        ):
+            results.append(canonical_name)
+
+    return results
+
+
 def _extract_experience(description: str) -> str | None:
     """Extract the specific experience requirement containing years."""
 
@@ -132,42 +222,22 @@ def build_job_intelligence(
 
     requirements = []
 
-    requirement_candidates = [
-        "Customer relationship management",
-        "Customer satisfaction",
-        "Business reviews",
-        "Customer health",
-        "Customer adoption",
-        "Escalation management",
-        "Stakeholder management",
-        "Customer communication",
-        "Problem solving",
-        "People leadership",
-        "Continuous improvement",
-        "Advanced SQL",
-        "Snowflake",
-        "Power BI development",
-        "Technical integrations",
-        "SaaS experience",
-        "CRM experience",
-        "Customer Success platform experience"
-    ]
+    requirement_lines = sections.get("requirements", [])
+    requirement_candidates = _canonical_requirements(
+        requirement_lines
+    )
 
     for requirement in requirement_candidates:
-
-        if requirement.lower() in description_lower:
-
-            criticality, category = classify_requirement(
-                requirement
+        criticality, category = classify_requirement(
+            requirement
+        )
+        requirements.append(
+            JobRequirement(
+                name=requirement,
+                criticality=criticality,
+                category=category
             )
-
-            requirements.append(
-                JobRequirement(
-                    name=requirement,
-                    criticality=criticality,
-                    category=category
-                )
-            )
+        )
 
     customer_success_capabilities = []
 
