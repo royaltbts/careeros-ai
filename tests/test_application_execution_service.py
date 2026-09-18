@@ -123,6 +123,8 @@ class ApplicationExecutionServiceTest(unittest.TestCase):
             package.status,
             OpportunityStatus.APPLIED,
         )
+        self.assertIsNotNone(result.external_reference)
+        self.assertEqual(result.external_reference, "TEST-REF")
 
 
 if __name__ == "__main__":
