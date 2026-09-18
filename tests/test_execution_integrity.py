@@ -23,6 +23,38 @@ class ExecutionIntegrityTest(unittest.TestCase):
 
         self.assertTrue(can_execute(package))
 
+    def test_unsafe_claims_block_execution(self):
+        package = load_existing_application_package("JOB-001")
+        self.assertIsNotNone(package)
+        package = copy.deepcopy(package)
+        package.status = OpportunityStatus.APPROVED
+        package.approved_by_human = True
+        package.claims_safe = False
+        package.content_hash = calculate_content_hash(package)
+        package.approved_content_hash = package.content_hash
+
+        self.assertFalse(can_execute(package))
+        self.assertIn(
+            "unsafe claims",
+            execution_block_reason(package),
+        )
+
+    def test_unready_resume_blocks_execution(self):
+        package = load_existing_application_package("JOB-001")
+        self.assertIsNotNone(package)
+        package = copy.deepcopy(package)
+        package.status = OpportunityStatus.APPROVED
+        package.approved_by_human = True
+        package.resume_ready = False
+        package.content_hash = calculate_content_hash(package)
+        package.approved_content_hash = package.content_hash
+
+        self.assertFalse(can_execute(package))
+        self.assertIn(
+            "Resume is not ready",
+            execution_block_reason(package),
+        )
+
     def test_changed_content_after_approval_is_blocked(self):
         package = load_existing_application_package("JOB-001")
 
