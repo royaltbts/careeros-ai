@@ -37,3 +37,12 @@ class TestJobWorkMode(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_missing_work_mode_signal_returns_none():
+    description = """
+    You will recruit, train, and lead a team of Customer Success Managers.
+    Travel to Greater China to build interactions and relationships with our users.
+    """
+
+    assert detect_work_mode(description) is None
