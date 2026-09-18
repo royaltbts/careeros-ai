@@ -129,3 +129,40 @@ class ApplicationExecutionServiceTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_blocked_adapter_result_does_not_persist_application():
+    package = ApplicationExecutionServiceTest()._approved_package()
+    authorization = ApplicationExecutionServiceTest()._authorization(package)
+    authorization.authorize(application_submission=True)
+
+    class BlockedAdapter:
+        def submit_application(self, package, authorization):
+            from app.models.execution_result import ExecutionResult
+
+            return ExecutionResult(
+                job_id=package.job_id,
+                company=package.company,
+                title=package.title,
+                action="APPLICATION_SUBMISSION",
+                execution_status="BLOCKED",
+                package_version=package.package_version,
+                content_hash=package.content_hash,
+                executed_at="TEST",
+                message="Blocked by adapter.",
+            )
+
+    adapter = BlockedAdapter()
+
+    with patch(
+        "app.application_execution_service.save_application_record"
+    ) as mock_save_crm:
+        result = execute_application(
+            package,
+            authorization,
+            adapter,
+        )
+
+    assert result.execution_status == "BLOCKED"
+    assert package.status == OpportunityStatus.APPROVED
+    mock_save_crm.assert_not_called()
