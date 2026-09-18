@@ -93,6 +93,68 @@ class TestMarketScout(unittest.TestCase):
             requirement_names
         )
 
+    def test_extracts_unsectioned_customer_success_description(self):
+        job = JobDiscovery(
+            job_id="TEST-CS-002",
+            company="CustomerFirst SaaS",
+            title="Customer Success Manager",
+            location="Remote",
+            work_mode="remote",
+            source="TEST",
+            source_url="https://example.com/jobs/TEST-CS-002",
+            discovered_at="2026-09-17T00:00:00Z",
+            raw_description=(
+                "We are looking for a Customer Success Manager to build strong "
+                "customer relationships, conduct regular business reviews, "
+                "monitor customer satisfaction, manage escalations, coordinate "
+                "with internal teams and improve customer outcomes. "
+                "5+ years of customer-facing experience. "
+                "Experience leading teams and driving continuous improvement "
+                "is valued."
+            ),
+        )
+
+        intelligence = build_job_intelligence(job)
+
+        self.assertGreater(
+            len(intelligence.responsibilities),
+            0
+        )
+        self.assertIn(
+            "build strong customer relationships",
+            intelligence.responsibilities
+        )
+        self.assertGreater(
+            len(intelligence.requirements),
+            0
+        )
+        self.assertEqual(
+            intelligence.experience_required,
+            "5+ years of customer-facing experience"
+        )
+
+        requirement_names = {
+            requirement.name
+            for requirement in intelligence.requirements
+        }
+
+        self.assertIn(
+            "Customer relationship management",
+            requirement_names
+        )
+        self.assertIn(
+            "Customer satisfaction",
+            requirement_names
+        )
+        self.assertIn(
+            "Escalation management",
+            requirement_names
+        )
+        self.assertIn(
+            "Continuous improvement",
+            requirement_names
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
