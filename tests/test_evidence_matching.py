@@ -137,6 +137,8 @@ class EvidenceMatchingTest(unittest.TestCase):
             "Snowflake",
             "Power BI development",
             "Technical integrations",
+            "SaaS experience",
+            "CRM experience",
         }
 
         self.assertEqual(

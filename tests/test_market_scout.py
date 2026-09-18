@@ -155,6 +155,58 @@ class TestMarketScout(unittest.TestCase):
             requirement_names
         )
 
+    def test_extracts_strategic_customer_success_description(self):
+        job = JobDiscovery(
+            job_id="TEST-CS-003",
+            company="EnterpriseCloud",
+            title="Strategic Customer Success Manager",
+            location="Remote",
+            work_mode="remote",
+            source="TEST",
+            source_url="https://example.com/jobs/TEST-CS-003",
+            discovered_at="2026-09-17T00:00:00Z",
+            raw_description=(
+                "The Strategic Customer Success Manager will manage relationships "
+                "with strategic customers, conduct executive business reviews, "
+                "drive adoption, monitor customer health, manage escalations and "
+                "coordinate cross-functional teams. Experience with enterprise "
+                "SaaS customers and customer success platforms is preferred."
+            ),
+        )
+
+        intelligence = build_job_intelligence(job)
+
+        self.assertIn(
+            "manage relationships with strategic customers",
+            intelligence.responsibilities
+        )
+        self.assertIn(
+            "conduct executive business reviews",
+            intelligence.responsibilities
+        )
+        self.assertIn(
+            "monitor customer health",
+            intelligence.responsibilities
+        )
+
+        requirement_names = {
+            requirement.name
+            for requirement in intelligence.requirements
+        }
+
+        self.assertIn(
+            "Customer health",
+            requirement_names
+        )
+        self.assertIn(
+            "SaaS experience",
+            requirement_names
+        )
+        self.assertIn(
+            "Customer Success platform experience",
+            requirement_names
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

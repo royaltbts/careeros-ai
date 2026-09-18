@@ -97,7 +97,7 @@ def _extract_sections(description: str) -> dict[str, list[str]]:
 
 
 def _extract_unsectioned_content(description: str) -> dict[str, list[str]]:
-    """Extract basic signals from job descriptions without section headings."""
+    """Extract basic responsibility and requirement signals from prose."""
 
     sentences = [
         sentence.strip()
@@ -108,38 +108,45 @@ def _extract_unsectioned_content(description: str) -> dict[str, list[str]]:
     responsibilities = []
     requirement_lines = []
 
-    responsibility_signals = [
-        "build strong customer relationships",
-        "conduct regular business reviews",
-        "monitor customer satisfaction",
-        "manage escalations",
-        "coordinate with internal teams",
-        "improve customer outcomes",
-        "drive continuous improvement",
-    ]
-
-    requirement_signals = [
-        "years of customer-facing experience",
-        "experience leading teams",
-        "continuous improvement",
-    ]
+    responsibility_verbs = (
+        "manage ",
+        "conduct ",
+        "drive ",
+        "monitor ",
+        "coordinate ",
+        "build ",
+        "improve ",
+    )
 
     for sentence in sentences:
         sentence_lower = sentence.lower()
 
-        matched_responsibility = False
-        for signal in responsibility_signals:
-            if signal in sentence_lower:
-                responsibilities.append(signal)
-                matched_responsibility = True
-
-        if matched_responsibility:
+        if "experience " in sentence_lower:
+            requirement_lines.append(sentence)
             continue
 
-        for signal in requirement_signals:
-            if signal in sentence_lower:
-                requirement_lines.append(sentence)
-                break
+        clauses = re.split(
+            r",\s+|\s+and\s+",
+            sentence,
+            flags=re.IGNORECASE,
+        )
+
+        for clause in clauses:
+            clause = clause.strip(" .")
+            clause_lower = clause.lower()
+
+            if " to " in clause_lower:
+                clause = clause.split(" to ", 1)[1].strip()
+                clause_lower = clause.lower()
+
+            if " will " in clause_lower:
+                clause = clause.split(" will ", 1)[1].strip()
+                clause_lower = clause.lower()
+
+            if clause_lower.startswith(
+                responsibility_verbs
+            ):
+                responsibilities.append(clause)
 
     return {
         "responsibilities": responsibilities,
