@@ -57,6 +57,10 @@ class GreenhouseJobDiscoveryProvider(JobDiscoveryProvider):
     def _clean_html(value: str) -> str:
         text = unescape(value or "")
 
+        # Greenhouse can return backslash-prefixed line breaks.
+        text = text.replace("\\\n", "\n")
+        text = text.replace(r"\n", "\n")
+
         # Preserve semantic boundaries from common block-level HTML.
         text = re.sub(
             r"</?(?:p|div|h[1-6]|li|ul|ol|br)[^>]*>",
@@ -75,7 +79,7 @@ class GreenhouseJobDiscoveryProvider(JobDiscoveryProvider):
             if line:
                 lines.append(line)
 
-        return "\\n".join(lines)
+        return "\n".join(lines)
 
     def discover(self) -> list[JobDiscovery]:
         if not self.board_token:

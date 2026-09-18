@@ -120,7 +120,14 @@ def build_job_intelligence(
     description = job.raw_description
     description_lower = description.lower()
     sections = _extract_sections(description)
-    responsibilities = sections.get("responsibilities", [])
+    responsibilities = [
+        item.replace("&nbsp;", " ").strip()
+        for item in sections.get("responsibilities", [])
+        if item.replace("&nbsp;", " ").strip()
+        and item.strip().lower() != "you will:"
+        and not item.strip().lower().startswith("we are seeking a manager to lead")
+    ]
+
     experience_required = _extract_experience(description)
 
     requirements = []
