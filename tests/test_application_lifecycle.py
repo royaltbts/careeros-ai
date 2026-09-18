@@ -47,3 +47,12 @@ def test_invalid_transition_raises_and_does_not_change_record():
 
     assert record.application_status == "APPROVED"
     assert record.history == []
+
+
+def test_transition_to_applied_does_not_create_submission_metadata():
+    record = make_record("APPROVED")
+
+    result = transition_application(record, OpportunityStatus.APPLIED)
+
+    assert result.submitted_at is None
+    assert result.external_reference is None
