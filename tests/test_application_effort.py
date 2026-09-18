@@ -74,3 +74,13 @@ class ApplicationEffortTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_apply_score_at_full_effort_threshold_is_full():
+    level, _, actions = determine_effort_level(
+        "APPLY",
+        90,
+    )
+
+    assert level == "FULL"
+    assert "Tailor resume" in actions
