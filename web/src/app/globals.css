@@ -574,6 +574,34 @@ button {
   min-height: 150px;
 }
 
+.opportunity-card .detail-metrics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 20px 0;
+}
+
+.opportunity-card .detail-metrics > div {
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.opportunity-card .detail-metrics span {
+  display: block;
+  color: #64748b;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.opportunity-card .detail-metrics strong {
+  display: block;
+  font-size: 24px;
+}
+
+.opportunity-card .opportunity-location {
+  color: #64748b;
+  margin: 12px 0 0;
+}
+
 .detail-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr);
