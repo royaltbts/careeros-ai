@@ -100,6 +100,37 @@ class CandidateProviderTest(unittest.TestCase):
                 )
 
 
+    def test_candidate_finding_validator_rejects_excluded_skill_as_strength(self):
+        from app.candidate_finding_validator import validate_candidate_finding
+        from app.models.candidate_finding import CandidateFinding
+
+        finding = CandidateFinding(
+            strengths=["Snowflake"]
+        )
+
+        with self.assertRaises(ValueError):
+            validate_candidate_finding(
+                finding,
+                self.evidence(),
+                self.candidate(),
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
+
+
+    def test_candidate_finding_validator_rejects_excluded_skill_as_strength(self):
+        from app.candidate_finding_validator import validate_candidate_finding
+        from app.models.candidate_finding import CandidateFinding
+
+        finding = CandidateFinding(
+            strengths=["Snowflake"]
+        )
+
+        with self.assertRaises(ValueError):
+            validate_candidate_finding(
+                finding,
+                self.evidence(),
+                self.candidate(),
+            )

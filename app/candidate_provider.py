@@ -22,6 +22,7 @@ def build_candidate_finding_with_provider(
         return validate_candidate_finding(
             finding,
             evidence,
+            candidate,
         )
 
     if provider != "openai":
@@ -69,4 +70,5 @@ Truth rules:
     return validate_candidate_finding(
         result.final_output,
         evidence,
+        candidate,
     )
