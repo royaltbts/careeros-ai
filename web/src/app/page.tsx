@@ -174,9 +174,10 @@ export default function Home() {
               {!loading &&
                 !error &&
                 opportunities.map((opportunity) => (
-                  <article
+                  <a
                     className="opportunity"
                     key={opportunity.job_id}
+                    href={`/opportunities/${opportunity.job_id}`}
                   >
                     <div className="company-mark">
                       {opportunity.company.charAt(0)}
@@ -197,7 +198,7 @@ export default function Home() {
                     <span className="badge strong">
                       {opportunity.priority}
                     </span>
-                  </article>
+                  </a>
                 ))}
 
               {!loading && !error && opportunities.length === 0 && (
