@@ -44,5 +44,62 @@ class CandidateProviderTest(unittest.TestCase):
         self.assertEqual(result.confidence, 0.90)
 
 
+    def test_llm_output_must_be_validated_against_verified_evidence(self):
+        result = build_candidate_finding_with_provider(
+            self.candidate(),
+            self.evidence(),
+            provider="mock",
+        )
+
+        verified_ids = {
+            item.id
+            for item in self.evidence()
+            if item.status == "VERIFIED"
+        }
+
+        self.assertTrue(
+            set(result.verified_evidence_refs).issubset(
+                verified_ids
+            )
+        )
+
+
+    def test_candidate_finding_validator_rejects_unverified_evidence(self):
+        from app.candidate_finding_validator import validate_candidate_finding
+        from app.models.candidate_finding import CandidateFinding
+
+        finding = CandidateFinding(
+            verified_evidence_refs=["EV001", "FAKE001"]
+        )
+
+        with self.assertRaises(ValueError):
+            validate_candidate_finding(
+                finding,
+                self.evidence(),
+            )
+
+
+    def test_openai_provider_rejects_unverified_llm_evidence(self):
+        from unittest.mock import patch
+        from app.models.candidate_finding import CandidateFinding
+
+        fake_finding = CandidateFinding(
+            verified_evidence_refs=["EV001", "FAKE001"]
+        )
+
+        with patch(
+            "app.candidate_provider.Runner.run_sync"
+        ) as mock_run:
+            mock_run.return_value.final_output = fake_finding
+
+            with self.assertRaises(ValueError):
+                build_candidate_finding_with_provider(
+                    self.candidate(),
+                    self.evidence(),
+                    provider="openai",
+                )
+
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -4,6 +4,7 @@ from agents import Runner
 
 from app.agent_nodes.profile_agent import profile_agent
 from app.candidate_finding import build_candidate_finding
+from app.candidate_finding_validator import validate_candidate_finding
 
 
 def build_candidate_finding_with_provider(
@@ -14,8 +15,12 @@ def build_candidate_finding_with_provider(
     provider = provider.strip().lower()
 
     if provider == "mock":
-        return build_candidate_finding(
+        finding = build_candidate_finding(
             candidate,
+            evidence,
+        )
+        return validate_candidate_finding(
+            finding,
             evidence,
         )
 
@@ -61,4 +66,7 @@ Truth rules:
             evidence,
         )
 
-    return result.final_output
+    return validate_candidate_finding(
+        result.final_output,
+        evidence,
+    )
