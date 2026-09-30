@@ -15,6 +15,8 @@ type EvidenceItem = {
 
 export default function EvidencePage() {
   const [evidence, setEvidence] = useState<EvidenceItem[]>([]);
+  const [filter, setFilter] = useState<"all" | "direct" | "transferable">("all");
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -52,6 +54,31 @@ export default function EvidencePage() {
   const transferable = evidence.filter(
     (item) => item.evidence_type === "Transferable experience",
   );
+
+  const filteredEvidence = (
+    filter === "all"
+      ? evidence
+      : filter === "direct"
+        ? direct
+        : transferable
+  ).filter((item) => {
+    const query = search.trim().toLowerCase();
+
+    if (!query) {
+      return true;
+    }
+
+    return [
+      item.id,
+      item.claim,
+      item.evidence,
+      item.capability,
+      ...item.allowed_use,
+    ]
+      .join(" ")
+      .toLowerCase()
+      .includes(query);
+  });
 
   return (
     <main className="detail-page">
@@ -102,9 +129,69 @@ export default function EvidencePage() {
         <p className="eyebrow">Evidence records</p>
         <h2>Verified evidence</h2>
 
-        <div className="evidence-list">
-          {evidence.map((item) => (
-            <article className="evidence-card" key={item.id}>
+        <div className="evidence-search">
+          <label htmlFor="evidence-search">Search evidence</label>
+          <input
+            id="evidence-search"
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search claims, capabilities, or allowed use..."
+          />
+        </div>
+
+        <div className="evidence-filters" role="tablist" aria-label="Evidence filters">
+          <button
+            className={filter === "all" ? "evidence-filter active" : "evidence-filter"}
+            onClick={() => setFilter("all")}
+            type="button"
+          >
+            All <span>{evidence.length}</span>
+          </button>
+
+          <button
+            className={filter === "direct" ? "evidence-filter active" : "evidence-filter"}
+            onClick={() => setFilter("direct")}
+            type="button"
+          >
+            Direct experience <span>{direct.length}</span>
+          </button>
+
+          <button
+            className={
+              filter === "transferable"
+                ? "evidence-filter active"
+                : "evidence-filter"
+            }
+            onClick={() => setFilter("transferable")}
+            type="button"
+          >
+            Transferable experience <span>{transferable.length}</span>
+          </button>
+        </div>
+
+        {filteredEvidence.length === 0 ? (
+          <div className="evidence-empty">
+            <span className="evidence-empty-icon">?</span>
+            <h3>No evidence found</h3>
+            <p>
+              No evidence matches the current search and filter.
+            </p>
+            <button
+              className="secondary-button"
+              onClick={() => {
+                setSearch("");
+                setFilter("all");
+              }}
+              type="button"
+            >
+              Clear search and filters
+            </button>
+          </div>
+        ) : (
+          <div className="evidence-list">
+            {filteredEvidence.map((item) => (
+              <article className="evidence-card" key={item.id}>
               <div className="evidence-header">
                 <div>
                   <span className="evidence-id">{item.id}</span>
@@ -143,9 +230,10 @@ export default function EvidencePage() {
                   ))}
                 </div>
               </div>
-            </article>
-          ))}
-        </div>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="review-banner">

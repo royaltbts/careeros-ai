@@ -187,16 +187,59 @@ export default function CandidatePage() {
         </div>
       </section>
 
-      <section className="panel">
-        <p className="eyebrow">Truth boundary</p>
-        <h2>Excluded skills</h2>
+      <section className="detail-grid">
+        <div className="panel">
+          <p className="eyebrow">Customer experience</p>
+          <h2>Issues handled</h2>
+          <div className="signal-list">
+            {candidate.customer_experience.customer_issues_handled.map(
+              (issue) => (
+                <div className="signal" key={issue}>
+                  <span>✓</span>
+                  {issue}
+                </div>
+              ),
+            )}
+          </div>
+        </div>
 
-        <div className="signal-list">
-          {candidate.excluded_skills.map((skill) => (
-            <div className="signal" key={skill}>
-              <span>×</span>
-              {skill}
+        <div className="panel">
+          <p className="eyebrow">Continuous improvement</p>
+          <h2>Improvement initiatives</h2>
+          {candidate.improvement_experience.map((initiative) => (
+            <div className="improvement-item" key={initiative.initiative}>
+              <strong>{initiative.initiative}</strong>
+              <p>{initiative.problem}</p>
+              <div className="improvement-actions">
+                {initiative.action.map((action) => (
+                  <span key={action}>{action}</span>
+                ))}
+              </div>
+              <small>{initiative.objective}</small>
             </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="panel truth-boundary-panel">
+        <div className="truth-boundary-header">
+          <div>
+            <p className="eyebrow">Truth boundary</p>
+            <h2>Excluded skills</h2>
+          </div>
+          <span className="boundary-badge">DO NOT CLAIM</span>
+        </div>
+
+        <p className="truth-boundary-description">
+          These capabilities are explicitly excluded from Candidate Truth and
+          must not be presented as expertise.
+        </p>
+
+        <div className="excluded-skill-list">
+          {candidate.excluded_skills.map((skill) => (
+            <span className="excluded-skill" key={skill}>
+              × {skill}
+            </span>
           ))}
         </div>
       </section>

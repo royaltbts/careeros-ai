@@ -79,7 +79,7 @@ export default function OpportunitiesPage() {
       )}
 
       {!loading && !error && opportunities.length > 0 && (
-        <section className="detail-grid">
+        <section className="detail-grid opportunity-portfolio">
           {opportunities.map((opportunity) => (
             <a
               className="panel opportunity-card"
